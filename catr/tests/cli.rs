@@ -16,7 +16,7 @@ fn usage() -> Result<()> {
         Command::cargo_bin(PRG)?
             .arg(flag)
             .assert()
-            .stdout(predicate::str::contains("Usage"));
+            .stdout(predicate::str::contains("USAGE"));
     }
     Ok(())
 }
