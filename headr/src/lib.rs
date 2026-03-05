@@ -24,7 +24,7 @@ pub fn get_args() -> MyResult<Config> {
                 .short("c")
                 .long("bytes")
                 .value_name("BYTES")
-                .takes_value(false)
+                .takes_value(true)
                 .conflicts_with("lines")
                 .help("Number of bytes"),
         )
@@ -49,12 +49,23 @@ pub fn get_args() -> MyResult<Config> {
         .value_of("lines")
         .map(parse_positive_int)
         .transpose()
-        .map_err(|e| format!("illegal line count -- {}", e))?;
+        .map_err(|e| {
+            format!(
+                "error: invalid value '{}' for \
+                '--lines <LINES>': invalid digit found in string",
+                e
+            )
+        })?;
     let bytes = matches
         .value_of("bytes")
         .map(parse_positive_int)
         .transpose()
-        .map_err(|e| format!("illegal byte count -- {}", e))?;
+        .map_err(|e| {
+            format!(
+                "error: invalid value '{e}' for \
+                '--bytes <BYTES>': invalid digit found in string"
+            )
+        })?;
 
     Ok(Config {
         files: matches.values_of_lossy("files").unwrap(),
