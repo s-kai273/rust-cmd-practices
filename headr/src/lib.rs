@@ -104,12 +104,22 @@ fn open(filename: &str) -> MyResult<Box<dyn BufRead>> {
 }
 
 pub fn run(config: Config) -> MyResult<()> {
-    for filename in config.files {
+    let num_files = config.files.len();
+    for (i, filename) in config.files.iter().enumerate() {
+        if num_files > 1 {
+            println!("{}==> {} <==", if i > 0 { "\n" } else { "" }, filename);
+        }
         match open(&filename) {
             Err(err) => eprintln!("{}: {}", filename, err),
-            Ok(file) => {
-                for line in file.lines().take(config.lines) {
-                    println!("{}", line?);
+            Ok(mut file) => {
+                let mut line = String::new();
+                for _ in 0..config.lines {
+                    let bytes = file.read_line(&mut line)?;
+                    if bytes == 0 {
+                        break;
+                    }
+                    print!("{line}");
+                    line.clear();
                 }
             }
         }
