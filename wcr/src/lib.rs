@@ -20,7 +20,7 @@ pub fn get_args() -> MyResult<Config> {
         .about("Rust wc")
         .arg(
             Arg::with_name("files")
-                .value_name("FILES")
+                .value_name("FILE")
                 .multiple(true)
                 .help("Input file(s)")
                 .default_value("-"),
@@ -29,25 +29,30 @@ pub fn get_args() -> MyResult<Config> {
             Arg::with_name("bytes")
                 .long("bytes")
                 .short("c")
-                .help("Show byte count"),
+                .help("Show byte count")
+                .takes_value(false),
         )
         .arg(
             Arg::with_name("chars")
                 .long("chars")
                 .short("m")
-                .help("Show character count"),
+                .help("Show character count")
+                .takes_value(false)
+                .conflicts_with("bytes"),
         )
         .arg(
             Arg::with_name("lines")
                 .long("lines")
                 .short("l")
-                .help("Show line count"),
+                .help("Show line count")
+                .takes_value(false),
         )
         .arg(
             Arg::with_name("words")
                 .long("words")
                 .short("w")
-                .help("Show word count"),
+                .help("Show word count")
+                .takes_value(false),
         )
         .get_matches();
 
